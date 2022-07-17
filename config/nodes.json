@@ -1,0 +1,567 @@
+[
+	{
+		"name": "tir",
+		"desc": "tir trading post",
+		"neighbors": [
+			{ "name": "tir_door", "distance": 3 }
+		]
+	},
+	{
+		"name": "tir_door",
+		"desc": "tir -> dugald",
+		"neighbors": [
+			{ "name": "tir", "distance": 3 },
+			{ "name": "dugald_north", "distance": 0 }
+		]
+	},
+	{
+		"name": "dugald_north",
+		"desc": "dugald -> tir",
+		"neighbors": [
+			{ "name": "dugald_center", "distance": 32 },
+			{ "name": "tir_door", "distance": 0 }
+		]
+	},
+	{
+		"name": "dugald_center",
+		"desc": "center tree in dugald aisle",
+		"neighbors": [
+			{ "name": "dugald_north", "distance": 103 },
+			{ "name": "dugald_west", "distance": 17 },
+			{ "name": "dugald_south", "distance": 45 }
+		]
+	},
+	{
+		"name": "dugald_west",
+		"desc": "dugald west door",
+		"neighbors": [
+			{ "name": "dugald_center", "distance": 17 },
+			{ "name": "sliab_east", "distance": 0 }
+		]
+	},
+	{
+		"name": "dugald_south",
+		"desc": "dugald -> dunby",
+		"neighbors": [
+			{ "name": "dugald_center", "distance": 45 },
+			{ "name": "dunby_north", "distance": 0 }
+		]
+	},
+	{
+		"name": "dunby_north",
+		"desc": "dunby -> dugald",
+		"neighbors": [
+			{ "name": "dugald_south", "distance": 0 },
+			{ "name": "dunby", "distance": 21 }
+		]
+	},
+	{
+		"name": "dunby",
+		"desc": "dunby trading post",
+		"neighbors": [
+			{ "name": "dunby_north", "distance": 21 },
+			{ "name": "dunby_nw", "distance": 26 },
+			{ "name": "dunby_west", "distance": 27 },
+			{ "name": "dunby_south", "distance": 41 },
+			{ "name": "dunby_east", "distance": 20 }
+		]
+	},
+	{
+		"name": "dunby_nw",
+		"desc": "dunby -> abb",
+		"neighbors": [
+			{ "name": "dunby", "distance": 26 },
+			{ "name": "abb_east", "distance": 0 }
+		]
+	},
+	{
+		"name": "dunby_west",
+		"desc": "dunby -> osna",
+		"neighbors": [
+			{ "name": "dunby", "distance": 27 },
+			{ "name": "osna_east", "distance": 0 }
+		]
+	},
+	{
+		"name": "dunby_south",
+		"desc": "dunby -> gairech",
+		"neighbors": [
+			{ "name": "dunby", "distance": 41 },
+			{ "name": "gairech_north", "distance": 0 }
+		]
+	},
+	{
+		"name": "dunby_east",
+		"desc": "dunby -> cobh",
+		"neighbors": [
+			{ "name": "dunby", "distance": 20 },
+			{ "name": "cobh_west", "distance": 0 }
+		]
+	},
+	{
+		"name": "cobh_west",
+		"desc": "cobh -> dunby",
+		"neighbors": [
+			{ "name": "dunby_east", "distance": 0 },
+			{ "name": "cobh", "distance": 5 }
+		]
+	},
+	{
+		"name": "cobh",
+		"desc": "cobh trading post",
+		"neighbors": [
+			{ "name": "cobh_west", "distance": 5 },
+			{ "name": "cobh_boats", "distance": 18 }
+		]
+	},
+	{
+		"name": "cobh_boats",
+		"desc": "cobh -> qilla/belvast",
+		"neighbors": [
+			{ "name": "belvast_boats", "distance": 960 },
+			{ "name": "qilla_boats", "distance": 960 }
+		]
+	},
+	{
+		"name": "gairech_north",
+		"desc": "gairech -> dunby",
+		"neighbors": [
+			{ "name": "dunby_south", "distance": 0 },
+			{ "name": "gairech_west", "distance": 33 },
+			{ "name": "gairech_south", "distance": 67 }
+		]
+	},
+	{
+		"name": "gairech_west",
+		"desc": "gairech -> mag",
+		"neighbors": [
+			{ "name": "mag_east", "distance": 0 },
+			{ "name": "gairech_north", "distance": 33 },
+			{ "name": "gairech_south", "distance": 67 }
+		]
+	},
+	{
+		"name": "gairech_south",
+		"desc": "gairech -> bangor",
+		"neighbors": [
+			{ "name": "bangor", "distance": 0 },
+			{ "name": "gairech_north", "distance": 67 },
+			{ "name": "gairech_west", "distance": 67 }
+		]
+	},
+	{
+		"name": "bangor",
+		"desc": "bangor trading post",
+		"neighbors": [
+			{ "name": "gairech_south", "distance": 0 },
+			{ "name": "bangor_south", "distance": 19 }
+		]
+	},
+	{
+		"name": "bangor_south",
+		"desc": "bangor -> morva",
+		"neighbors": [
+			{ "name": "morva_north", "distance": 0 },
+			{ "name": "bangor", "distance": 19 }
+		]
+	},
+	{
+		"name": "morva_north",
+		"desc": "morva -> bangor",
+		"neighbors": [
+			{ "name": "bangor_south", "distance": 0 },
+			{ "name": "morva_south", "distance": 26 }
+		]
+	},
+	{
+		"name": "morva_south",
+		"desc": "morva -> ceann",
+		"neighbors": [
+			{ "name": "ceann_north", "distance": 0 },
+			{ "name": "morva_north", "distance": 26 }
+		]
+	},
+	{
+		"name": "ceann_north",
+		"desc": "ceann -> morva",
+		"neighbors": [
+			{ "name": "morva_south", "distance": 0 },
+			{ "name": "ceann_boats", "distance": 19 }
+		]
+	},
+	{
+		"name": "ceann_boats",
+		"desc": "ceann -> sella/connous",
+		"neighbors": [
+			{ "name": "ceann_north", "distance": 19 },
+			{ "name": "sella_boats", "distance": 960 },
+			{ "name": "connous_boats", "distance": 960 }
+		]
+	},
+	{
+		"name": "mag_east",
+		"desc": "mag -> gairech",
+		"neighbors": [
+			{ "name": "gairech_west", "distance": 0 },
+			{ "name": "mag_west", "distance": 62 }
+		]
+	},
+	{
+		"name": "mag_west",
+		"desc": "mag -> emain",
+		"neighbors": [
+			{ "name": "emain_south", "distance": 0 },
+			{ "name": "mag_east", "distance": 62 }
+		]
+	},
+	{
+		"name": "emain_south",
+		"desc": "emain -> mag",
+		"neighbors": [
+			{ "name": "mag_west", "distance": 0 },
+			{ "name": "emain_center", "distance": 33 }
+		]
+	},
+	{
+		"name": "emain_center",
+		"desc": "emain town square",
+		"neighbors": [
+			{ "name": "emain_south", "distance": 33 },
+			{ "name": "emain", "distance": 19 },
+			{ "name": "emain_west", "distance": 26 }
+		]
+	},
+	{
+		"name": "emain_west",
+		"desc": "emain -> blago",
+		"neighbors": [
+			{ "name": "blago_east", "distance": 0 },
+			{ "name": "emain_center", "distance": 26 },
+			{ "name": "emain", "distance": 57 }
+		]
+	},
+	{
+		"name": "emain",
+		"desc": "emain trading post",
+		"neighbors": [
+			{ "name": "emain_west", "distance": 57 },
+			{ "name": "emain_center", "distance": 19 },
+			{ "name": "emain_ne", "distance": 15 }
+		]
+	},
+	{
+		"name": "emain_ne",
+		"desc": "emain -> osna",
+		"neighbors": [
+			{ "name": "osna_west", "distance": 0 },
+			{ "name": "emain", "distance": 15 }
+		]
+	},
+	{
+		"name": "osna_west",
+		"desc": "osna -> emain",
+		"neighbors": [
+			{ "name": "emain_ne", "distance": 0 },
+			{ "name": "osna_east", "distance": 35 }
+		]
+	},
+	{
+		"name": "osna_east",
+		"desc": "osna -> dunby",
+		"neighbors": [
+			{ "name": "dunby_west", "distance": 0 },
+			{ "name": "osna_west", "distance": 35 }
+		]
+	},
+	{
+		"name": "abb_east",
+		"desc": "abb -> dunby",
+		"neighbors": [
+			{ "name": "dunby_west", "distance": 0 },
+			{ "name": "abb_west", "distance": 61 }
+		]
+	},
+	{
+		"name": "abb_west",
+		"desc": "abb -> tail",
+		"neighbors": [
+			{ "name": "tail_south", "distance": 0 },
+			{ "name": "abb_west", "distance": 61 }
+		]
+	},
+	{
+		"name": "sliab_east",
+		"desc": "sliab -> dugald",
+		"neighbors": [
+			{ "name": "dugald_west", "distance": 0 },
+			{ "name": "sliab_west", "distance": 50 }
+		]
+	},
+	{
+		"name": "sliab_west",
+		"desc": "sliab -> tail",
+		"neighbors": [
+			{ "name": "tail_east", "distance": 0 },
+			{ "name": "sliab_east", "distance": 50 }
+		]
+	},
+	{
+		"name": "tail_south",
+		"desc": "tail -> abb",
+		"neighbors": [
+			{ "name": "abb_west", "distance": 0 },
+			{ "name": "tail", "distance": 51 },
+			{ "name": "tail_east", "distance": 46 },
+			{ "name": "tail_west", "distance": 114 }
+		]
+	},
+	{
+		"name": "tail_east",
+		"desc": "tail -> sliab",
+		"neighbors": [
+			{ "name": "sliab_west", "distance": 0 },
+			{ "name": "tail", "distance": 23 },
+			{ "name": "tail_south", "distance": 46 }
+		]
+	},
+	{
+		"name": "tail",
+		"desc": "tail trading post",
+		"neighbors": [
+			{ "name": "tail_east", "distance": 23 },
+			{ "name": "tail_south", "distance": 51 },
+			{ "name": "tail_west", "distance": 94 }
+		]
+	},
+	{
+		"name": "tail_west",
+		"desc": "tail -> corrib",
+		"neighbors": [
+			{ "name": "corrib_north", "distance": 0 },
+			{ "name": "tail", "distance": 94 },
+			{ "name": "tail_south", "distance": 114 }
+		]
+	},
+	{
+		"name": "corrib_north",
+		"desc": "corrib -> tail",
+		"neighbors": [
+			{ "name": "tail_west", "distance": 0 },
+			{ "name": "corrib_south", "distance": 30 }
+		]
+	},
+	{
+		"name": "corrib_south",
+		"desc": "corrib -> tara",
+		"neighbors": [
+			{ "name": "tara_north", "distance": 0 },
+			{ "name": "corrib_north", "distance": 30 }
+		]
+	},
+	{
+		"name": "tara_north",
+		"desc": "tara -> corrib",
+		"neighbors": [
+			{ "name": "corrib_south", "distance": 0 },
+			{ "name": "tara", "distance": 9 }
+		]
+	},
+	{
+		"name": "tara",
+		"desc": "tara trading post",
+		"neighbors": [
+			{ "name": "tara_north", "distance": 9 },
+			{ "name": "tara_south", "distance": 92 }
+		]
+	},
+	{
+		"name": "tara_south",
+		"desc": "tara -> blago",
+		"neighbors": [
+			{ "name": "blago_west", "distance": 0 },
+			{ "name": "tara", "distance": 92 }
+		]
+	},
+	{
+		"name": "blago_west",
+		"desc": "blago -> tara",
+		"neighbors": [
+			{ "name": "tara_south", "distance": 0 },
+			{ "name": "blago_east", "distance": 67 }
+		]
+	},
+	{
+		"name": "blago_east",
+		"desc": "baglo -> emain",
+		"neighbors": [
+			{ "name": "emain_west", "distance": 0 },
+			{ "name": "blago_west", "distance": 67 }
+		]
+	},
+	{
+		"name": "belvast_boats",
+		"desc": "belvast -> cobh",
+		"neighbors": [
+			{ "name": "belvast", "distance": 9 },
+			{ "name": "cobh_boats", "distance": 960 }
+		]
+	},
+	{
+		"name": "belvast",
+		"desc": "belvast trading post",
+		"neighbors": [
+			{ "name": "belvast_boats", "distance": 9 }
+		]
+	},
+
+	{
+		"name": "qilla_boats",
+		"desc": "qilla -> cobh",
+		"neighbors": [
+			{ "name": "cobh_boats", "distance": 960 },
+			{ "name": "qilla_entrance", "distance": 8 }
+		]
+	},
+	{
+		"name": "qilla_entrance",
+		"desc": "entrance to qilla",
+		"neighbors": [
+			{ "name": "qilla_exit", "distance": 0 },
+			{ "name": "qilla_boats", "distance": 8 }
+		]
+	},
+	{
+		"name": "qilla",
+		"desc": "qilla trading post",
+		"neighbors": [
+			{ "name": "qilla_exit", "distance": 7 },
+			{ "name": "qilla_north", "distance": 213 },
+			{ "name": "qilla_east", "distance": 263 }
+		]
+	},
+	{
+		"name": "qilla_exit",
+		"desc": "qilla base camp",
+		"neighbors": [
+			{ "name": "qilla_entrance", "distance": 0 },
+			{ "name": "qilla", "distance": 7 }
+		]
+	},
+	{
+		"name": "qilla_north",
+		"desc": "qilla -> cor",
+		"neighbors": [
+			{ "name": "cor_south", "distance": 0 },
+			{ "name": "qilla", "distance": 213 }
+		]
+	},
+	{
+		"name": "qilla_east",
+		"desc": "qilla -> filia",
+		"neighbors": [
+			{ "name": "filia_west", "distance": 0 },
+			{ "name": "qilla", "distance": 263 }
+		]
+	},
+
+	{
+		"name": "filia_west",
+		"desc": "filia -> quilla",
+		"neighbors": [
+			{ "name": "qilla_east", "distance": 0, "ground": "sand" },
+			{ "name": "filia", "distance": 268, "ground": "sand" },
+			{ "name": "connous_boats", "distance": 180, "ground": "sand" },
+			{ "name": "filia_north", "distance": 264, "ground": "sand" }
+		]
+	},
+	{
+		"name": "connous_boats",
+		"desc": "connous -> ceann",
+		"neighbors": [
+			{ "name": "ceann_boats", "distance": 960 },
+			{ "name": "filia_west", "distance": 180, "ground": "sand" },
+			{ "name": "filia_north", "distance": 214, "ground": "sand" },
+			{ "name": "filia", "distance": 186, "ground": "sand" }
+		]
+	},
+	{
+		"name": "filia",
+		"desc": "filia trading post",
+		"neighbors": [
+			{ "name": "connous_boats", "distance": 186, "ground": "sand" },
+			{ "name": "filia_west", "distance": 268, "ground": "sand" },
+			{ "name": "filia_north", "distance": 143, "ground": "sand" }
+		]
+	},
+	{
+		"name": "filia_north",
+		"desc": "filia -> quilla",
+		"neighbors": [
+			{ "name": "cor_east", "distance": 0 },
+			{ "name": "filia", "distance": 143, "ground": "sand" },
+			{ "name": "connous_boats", "distance": 214, "ground": "sand" },
+			{ "name": "filia_west", "distance": 264, "ground": "sand" }
+		]
+	},
+
+	{
+		"name": "cor",
+		"desc": "cor trading post",
+		"neighbors": [
+			{ "name": "cor_east", "distance": 124 },
+			{ "name": "cor_south", "distance": 181 },
+			{ "name": "cor_north", "distance": 232 }
+		]
+	},
+	{
+		"name": "cor_east",
+		"desc": "cor -> filia",
+		"neighbors": [
+			{ "name": "filia_north", "distance": 0 },
+			{ "name": "cor", "distance": 124 },
+			{ "name": "cor_south", "distance": 254 }
+		]
+	},
+	{
+		"name": "cor_south",
+		"desc": "cor -> qilla",
+		"neighbors": [
+			{ "name": "qilla_north", "distance": 0 },
+			{ "name": "cor", "distance": 181 },
+			{ "name": "cor_east", "distance": 254 }
+		]
+	},
+	{
+		"name": "cor_north",
+		"desc": "cor -> vales",
+		"neighbors": [
+			{ "name": "vales_south", "distance": 0 },
+			{ "name": "cor", "distance": 232 }
+		]
+	},
+
+	{
+		"name": "vales_south",
+		"desc": "vales -> cor",
+		"neighbors": [
+			{ "name": "cor_north", "distance": 0 },
+			{ "name": "vales", "distance": 123, "ground": "snow" }
+		]
+	},
+	{
+		"name": "vales_boats",
+		"desc": "vales -> cobh",
+		"neighbors": [
+			{ "name": "vales", "distance": 187, "ground": "snow" },
+			{ "name": "cobh_boats", "distance": 960 }
+		]
+	},
+	{
+		"name": "vales",
+		"desc": "vales trading post",
+		"neighbors": [
+			{ "name": "vales_south", "distance": 123, "ground": "snow" },
+			{ "name": "vales_boats", "distance": 187, "ground": "snow" }
+		]
+	}
+]

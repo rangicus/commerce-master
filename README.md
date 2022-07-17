@@ -18,3 +18,5 @@ and unless you also have William the Partner Vehicle numbers will be incorrect.
 All of the values for *Trading Posts* and *Items* are hardcoded at the moment.
 So you'll just have to figure it out and write Python if you want different values.
 I'll be adding JSON config support soon™.
+
+All of the timings for the nodes have been recorded in seconds taken to travel the distance on a nimbus.
