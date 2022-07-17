@@ -316,10 +316,28 @@ def tableFromRoutes (routes: List[Route]):
 		rows.append([
 			route.dest.name,
 			route.item.name,
-			route.quantity,
-			route.totalProfit
+			numberComma(route.quantity),
+			numberComma(route.totalProfit)
 		])
 	return rows
+
+def numberComma (x: float):
+	isNegative = (x < 0)
+	if isNegative:
+		x = -x
+	
+	decimal = x % 1
+	x -= decimal
+	if decimal == 0: decimal = ""
+	else: decimal = f".{decimal}"
+
+	x = str(x)[::-1]
+	parts = []
+	for i in range(0, len(x), 3):
+		parts.append(x[i:i+3])
+	x = ",".join(parts)[::-1] + decimal
+	if isNegative: x = f"-{x}"
+	return x
 
 # Setup
 
