@@ -1,0 +1,58 @@
+[
+	{
+		"name": "[P] Backpack",
+		"slots": 5,
+		"weight": 500,
+		"speed": 0.91,
+		"snowSpeed": 0.91,
+		"sandSpeed": 0.91
+	},
+	{
+		"name": "[P] Handcart",
+		"slots": 7,
+		"weight": 900,
+		"speed": 1,
+		"snowSpeed": 1,
+		"sandSpeed": 1
+	},
+	{
+		"name": "Wagon (Alpaca)",
+		"slots": 10,
+		"weight": 1100,
+		"speed": 1.9,
+		"snowSpeed": 1.9,
+		"sandSpeed": 1.9
+	},
+	{
+		"name": "[P] Pack Elephant",
+		"slots": 8,
+		"weight": 1800,
+		"speed": 1.37,
+		"snowSpeed": 1.37,
+		"sandSpeed": 1.37
+	},
+	{
+		"name": "[P] Swift Dog Sled",
+		"slots": 12,
+		"weight": 900,
+		"speed": 1.86,
+		"snowSpeed": 3.09,
+		"sandSpeed": 1.86
+	},
+	{
+		"name": "[P] Stalwart Camel",
+		"slots": 8,
+		"weight": 1600,
+		"speed": 2.15,
+		"snowSpeed": 1.33,
+		"sandSpeed": 3.07
+	},
+	{
+		"name": "[P] Magnate's Skiff",
+		"slots": 9,
+		"weight": 1400,
+		"speed": 2.4,
+		"snowSpeed": 2.4,
+		"sandSpeed": 2.4
+	}
+]

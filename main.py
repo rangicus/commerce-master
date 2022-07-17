@@ -1,7 +1,7 @@
 # Imports
 
+import re, math, json, os
 import PySimpleGUI as sg
-import re, math
 from typing import List
 
 # Classes
@@ -42,6 +42,8 @@ class Route:
 		return singleProfit * self.quantity
 
 # Data
+
+__location__ = os.path.realpath( os.path.join(os.getcwd(), os.path.dirname(__file__)) )
 
 TRADING_POSTS = [
 	TradingPost("Tir Chonaill", [
@@ -118,15 +120,13 @@ TRADING_POSTS = [
 	]),
 ]
 
-VEHICLES = [
-	Vehicle("[P] Backpack", 5, 500, 0.91),
-	Vehicle("[P] Handcart", 7, 900, 1),
-	Vehicle("[A] Wagon", 10, 1100, 1.9),
-	Vehicle("[P] Pack Elephant", 8, 1800, 1.37),
-	Vehicle("[P] Swift Dog Sled", 12, 900, 1.86, 3.09),
-	Vehicle("[P] Stalwart Camel", 8, 1600, 2.15, 1.33, 3.07),
-	Vehicle("[P] Magnate's Skiff", 9, 1400, 2.4)
-]
+VEHICLES = []
+with open(os.path.join(__location__, "config", "vehicles.json"), "r") as f:
+	data = json.load(f)
+	for v in data:
+		VEHICLES.append(
+			Vehicle(v["name"], v["slots"], v["weight"], v["speed"], v["snowSpeed"], v["sandSpeed"])
+		)
 
 selectedTradingPost = None
 selectedItem: Item | None = None
@@ -184,7 +184,7 @@ def createLayout ():
 		expand_x=True,
 		expand_y=True,
 		layout=[
-			[sg.Table([["", ""]], k="tableRoutes", expand_x=True, expand_y=True, headings=["Destination", "Item", "Amount", "Total Profit"])],
+			[sg.Table([["", ""]], k="tableRoutes", expand_x=True, expand_y=True, headings=["Destination", "Vehicle", "Item", "Amount", "Total Profit"])],
 			[sg.Button("Calculate", k="buttonCalc", expand_x=True)]
 		]
 	)
@@ -315,6 +315,7 @@ def tableFromRoutes (routes: List[Route]):
 	for route in routes:
 		rows.append([
 			route.dest.name,
+			route.vehicle.name,
 			route.item.name,
 			numberComma(route.quantity),
 			numberComma(route.totalProfit)
