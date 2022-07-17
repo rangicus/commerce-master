@@ -3,6 +3,7 @@
 import re, math, json, os
 import PySimpleGUI as sg
 from typing import List
+from copy import deepcopy
 
 # Classes
 
@@ -14,9 +15,10 @@ class Item:
 		self.prices = None
 
 class TradingPost:
-	def __init__ (self, name: str, items: List[Item]):
+	def __init__ (self, name: str, loc: str, items: List[Item]):
 		self.name = name
 		self.items = items
+		self.loc = loc
 
 class Vehicle:
 	def __init__ (self, name: str, slots: int, maxWeight: int, speed: float, snowSpeed: float = None, sandSpeed: float = None):
@@ -28,8 +30,26 @@ class Vehicle:
 		self.snowSpeed = snowSpeed if snowSpeed != None else speed
 		self.sandSpeed = sandSpeed if sandSpeed != None else speed
 
+class Connection:
+	def __init__ (self, target: str, distance: int, ground: str = "normal"):
+		self.target = target
+		self.distance = distance
+		self.ground = ground
+
+	def __str__ (self):
+		return f"{self.target} ({self.distance}) [{self.ground}]"
+
+class Node:
+	def __init__ (self, name: str, n: List[Connection]):
+		self.name = name
+		self.n = n
+		self.distance = -1
+		self.parent = None
+
 class Route:
 	def __init__ (self, dest: TradingPost, vehicle: Vehicle, item: Item, quantity: int):
+		global NODES
+
 		self.dest = dest
 		self.vehicle = vehicle
 		self.item = item
@@ -37,82 +57,122 @@ class Route:
 
 		self.totalProfit = self.getTotalProfit()
 
+		# Pathing
+		startNode = None
+		endNode = None
+		for node in NODES:
+			if node.name == selectedTradingPost.loc:
+				startNode = node
+			if node.name == dest.loc:
+				endNode = node
+		
+		(path, distance) = dijkstra(startNode, endNode, self.vehicle)
+		self.path = path
+		self.seconds = distance
+
+		self.profitPerMinute = self.totalProfit / (self.seconds / 60)
+
 	def getTotalProfit (self):
 		singleProfit = int(self.item.prices[self.dest.name])
 		return singleProfit * self.quantity
+
+	def getTotalTime (self):
+		global selectedTradingPost
+		if selectedTradingPost == None: return
+
+	def print (self):
+		print("Route:", self.dest.name, self.vehicle.name, self.item.name, self.quantity, self.totalProfit, self.seconds, self.profitPerMinute)
 
 # Data
 
 __location__ = os.path.realpath( os.path.join(os.getcwd(), os.path.dirname(__file__)) )
 
+NODES = []
+with open(os.path.join(__location__, "config", "nodes.json"), "r") as f:
+	data = json.load(f)
+	for n in data:
+		cons: List[Connection] = []
+		for c in n["neighbors"]:
+			ground = "normal"
+			if "ground" in c: ground = c["ground"]
+
+			# distance is measured in time taken for a nimbus
+			# ive determined that in commerce speed units, nimbus' move at 384% speed, or 3.84
+			# here we multiply that speed so that later we can divide by the speed of the chosen vehicle to get good time estimate
+			distance = int(c["distance"]) * 4
+
+			cons.append( Connection(c["name"], distance, ground) )
+		NODES.append(Node( n["name"], cons ))
+
+
 TRADING_POSTS = [
-	TradingPost("Tir Chonaill", [
+	TradingPost("Tir Chonaill", "tir", [
 		Item("Baby Potion", 80, 1),
 		Item("Diet Potion", 100, 1),
 		Item("Snore Prevention Potion", 60, 2),
 		Item("Wild Ginseng Potion", 40, 3)
 	]),
-	TradingPost("Dunbarton", [
+	TradingPost("Dunbarton", "dunby", [
 		Item("Spider Gloves", 10, 5),
 		Item("Wool Boots", 10, 8),
 		Item("Ogre Executioner Mask", 45, 4),
 		Item("Incubus Suit", 5, 25),
 	]),
-	TradingPost("Bangor", [
+	TradingPost("Bangor", "bangor", [
 		Item("Bangor Coal", 10, 8),
 		Item("Marble", 10, 20),
 		Item("Topaz", 6, 20),
 		Item("Highlander Ore", 8, 25)
 	]),
-	TradingPost("Emain Macha", [
+	TradingPost("Emain Macha", "emain", [
 		Item("Berry Granola", 40, 3),
 		Item("Butter Beer", 30, 4),
 		Item("Smoked Wild Animal", 40, 3),
 		Item("Triple Pasta", 50, 4),
 	]),
-	TradingPost("Taillteann", [
+	TradingPost("Taillteann", "tail", [
 		Item("Heat Crystal", 60, 2),
 		Item("Music Box Preservation Stone", 40, 3),
 		Item("Palala Crystal", 100, 2),
 		Item("Circle Barrier Spikes Crystal", 60, 3),
 	]),
-	TradingPost("Tara", [
+	TradingPost("Tara", "tara", [
 		Item("Mini Dressing Table", 12, 9),
 		Item("Tea Table", 5, 25),
 		Item("Rocking Chair", 5, 25),
 		Item("Bunk Bed", 3, 60),
 	]),
-	TradingPost("Cobh", [
+	TradingPost("Cobh", "cobh", [
 		Item("Cobh Seaweed", 50, 2),
 		Item("Cobh Oyster", 40, 3),
 		Item("Shark Fin", 30, 4),
 		Item("Jellyfish", 30, 6),
 	]),
-	TradingPost("Belvast", [
+	TradingPost("Belvast", "belvast", [
 		Item("Iron Whip", 15, 8),
 		Item("Dark Sword", 10, 12),
 		Item("Safe", 1, 160),
 		Item("Skeleton Ogre Armor", 1, 160),
 	]),
-	TradingPost("Qilla", [
+	TradingPost("Qilla", "qilla", [
 		Item("Mint Chocolate Powder", 100, 1),
 		Item("Fresh Pomegranate", 100, 1),
 		Item("Mana Tunnel Figure", 80, 2),
 		Item("Exploration Rescue Kit", 50, 3),
 	]),
-	TradingPost("Filia", [
+	TradingPost("Filia", "filia", [
 		Item("Small Glass Chunk", 60, 10),
 		Item("Cinnamon Perfume", 50, 30),
 		Item("Dried Saffron", 10, 25),
 		Item("Longa Natural Rock Salt", 5, 40),
 	]),
-	TradingPost("Cor", [
+	TradingPost("Cor", "cor", [
 		Item("Courcle Ruins Souvenir", 50, 2),
 		Item("Large Ritual Mask", 40, 3),
 		Item("La Terra Raspberry", 60, 2),
 		Item("Artifact Restoration Tool Set", 70, 2),
 	]),
-	TradingPost("Vales", [
+	TradingPost("Vales", "vales", [
 		Item("Vales Padded Coat", 50, 1),
 		Item("Natural Glacial Water", 35, 2),
 		Item("Ice Skates", 50, 1),
@@ -130,8 +190,94 @@ with open(os.path.join(__location__, "config", "vehicles.json"), "r") as f:
 
 selectedTradingPost = None
 selectedItem: Item | None = None
+displayedRoutes = []
 
-# Functions
+# General Functions
+
+def getTradingPostNames () -> List[str]:
+	global TRADING_POSTS
+	return list(map(lambda x: x.name, TRADING_POSTS))
+
+def getTradingPost (name: str):
+	global TRADING_POSTS
+
+	for post in TRADING_POSTS:
+		if post.name == name:
+			return post
+
+	raise ValueError("Unknown Post")
+
+def chooseTradingPost (name: str):
+	global selectedTradingPost, selectedItem, window
+
+	selectedItem = None
+	window["framePrices"].update(visible=False)
+
+	selectedTradingPost = getTradingPost(name)
+	print("Trading Post:", selectedTradingPost.name)
+
+	window["frameItems"].update(visible=True)
+	updateItems()
+
+def chooseItem (item: Item):
+	global selectedItem, window
+
+	selectedItem = item
+	print("Item:", item.name)
+
+	window["framePrices"].update(value=f"Prices - {item.name}", visible=True)
+	updatePrices()
+
+def calculateRoutes ():
+	if selectedTradingPost == None: return
+
+	routes: List[Route] = []
+	for post in TRADING_POSTS:
+		if post != selectedTradingPost:
+			# Each possible destination.
+			for vehicle in VEHICLES:
+				# Each possible vehicle.
+				for item in selectedTradingPost.items:
+					if item.prices == None: continue
+					
+					# Profit per Item?
+					rawSingleProfit = re.sub("\D", "", item.prices[post.name])
+					if len(rawSingleProfit) == 0: continue
+
+					# How many?
+					maxBySlots = item.stackSize * vehicle.slots
+					maxByWeight = math.floor(vehicle.maxWeight / item.weight)
+					itemQuantity = min(maxBySlots, maxByWeight)
+
+					routes.append(
+						Route(post, vehicle, item, itemQuantity)
+					)
+
+	routes.sort(key=(lambda r: -r.profitPerMinute))
+	window["tableRoutes"].update(values=tableFromRoutes(routes))
+
+def clearCurrentItem ():
+	if selectedItem == None: return
+
+	for post in TRADING_POSTS:
+		if selectedItem not in post.items:
+			selectedItem.prices[post.name] = ""
+
+	i = 0
+	for post in TRADING_POSTS:
+		if selectedItem not in post.items:
+			window[f"textPrice{i}"].update(post.name + ":")
+			
+			inputPrice = window[f"inputPrice{i}"]
+			inputPrice.update(selectedItem.prices[post.name])
+			inputPrice.metadata = post
+			
+			i += 1
+
+def numberComma (x: float):
+	return "{:,.2f}".format(x)
+
+# UI Functions
 
 def createLayout ():
 	colSelect = sg.Column(
@@ -184,7 +330,14 @@ def createLayout ():
 		expand_x=True,
 		expand_y=True,
 		layout=[
-			[sg.Table([["", ""]], k="tableRoutes", expand_x=True, expand_y=True, headings=["Destination", "Vehicle", "Item", "Amount", "Total Profit"])],
+			[sg.Table(
+				[["", ""]],
+				k="tableRoutes",
+				expand_x=True,
+				expand_y=True,
+				enable_events=True,
+				headings=["Destination", "Vehicle", "Item", "Profit/Minute", "Minutes", "Amount", "Total Profit"]
+			)],
 			[sg.Button("Calculate", k="buttonCalc", expand_x=True)]
 		]
 	)
@@ -192,40 +345,6 @@ def createLayout ():
 	return [
 		[colSelect, colPrices, colResults],
 	]
-
-def getTradingPostNames () -> List[str]:
-	global TRADING_POSTS
-	return list(map(lambda x: x.name, TRADING_POSTS))
-
-def getTradingPost (name: str):
-	global TRADING_POSTS
-
-	for post in TRADING_POSTS:
-		if post.name == name:
-			return post
-
-	raise ValueError("Unknown Post")
-
-def chooseTradingPost (name: str):
-	global selectedTradingPost, selectedItem, window
-
-	selectedItem = None
-	window["framePrices"].update(visible=False)
-
-	selectedTradingPost = getTradingPost(name)
-	print("Trading Post:", selectedTradingPost.name)
-
-	window["frameItems"].update(visible=True)
-	updateItems()
-
-def chooseItem (item: Item):
-	global selectedItem, window
-
-	selectedItem = item
-	print("Item:", item.name)
-
-	window["framePrices"].update(value=f"Prices - {item.name}", visible=True)
-	updatePrices()
 
 def updateItems ():
 	# Hide all buttons.
@@ -238,6 +357,23 @@ def updateItems ():
 	for item in selectedTradingPost.items:
 		window[f"buttonItem{i}"].update(text=item.name, visible=True)
 		i += 1
+
+def tableFromRoutes (routes: List[Route]):
+	global displayedRoutes
+	displayedRoutes = routes
+
+	rows = []
+	for route in routes:
+		rows.append([
+			route.dest.name,
+			route.vehicle.name,
+			route.item.name,
+			numberComma(math.floor(route.profitPerMinute)),
+			numberComma(route.seconds / 60),
+			numberComma(route.quantity),
+			numberComma(route.totalProfit)
+		])
+	return rows
 
 def updatePrices ():
 	global selectedTradingPost, selectedItem, window
@@ -264,81 +400,64 @@ def updatePrices ():
 			
 			i += 1
 
-def calculateRoutes ():
-	if selectedTradingPost == None: return
+# Pathfinding Functions
 
-	routes: List[Route] = []
-	for post in TRADING_POSTS:
-		if post != selectedTradingPost:
-			# Each possible destination.
-			for vehicle in VEHICLES:
-				# Each possible vehicle.
-				for item in selectedTradingPost.items:
-					if item.prices == None: continue
-					
-					# Profit per Item?
-					rawSingleProfit = re.sub("\D", "", item.prices[post.name])
-					if len(rawSingleProfit) == 0: continue
+def dijkstra (start: Node, end: Node, vehicle: Vehicle):
+	graph = deepcopy(NODES)
 
-					# How many?
-					maxBySlots = item.stackSize * vehicle.slots
-					maxByWeight = math.floor(vehicle.maxWeight / item.weight)
-					itemQuantity = min(maxBySlots, maxByWeight)
+	for node in graph:
+		node.distance = 0 if node.name == start.name else 9999
+		node.parent = None
 
-					routes.append(
-						Route(post, vehicle, item, itemQuantity)
-					)
+	unexploredSet: List[Node] = [*graph]
+	while len(unexploredSet) > 0:
+		# Make lowest distance node current
+		lowestValue = 99999
+		lowestIndex = -1
+		for i in range(len(unexploredSet)):
+			node = unexploredSet[i]
+			distance = node.distance
+			if distance < lowestValue:
+				lowestValue = distance
+				lowestIndex = i
+		if lowestIndex == -1:
+			print(list(map(lambda x: x.name, unexploredSet)))
+			raise ValueError()
+		current: Node = unexploredSet[lowestIndex]
+		del unexploredSet[lowestIndex]
 
-	routes.sort(key=(lambda r: -r.getTotalProfit()))
-	window["tableRoutes"].update(values=tableFromRoutes(routes))
+		# Check completed
+		if current.name == end.name:
+			totalDistance = current.distance
 
-def clearCurrentItem ():
-	if selectedItem == None: return
+			path = []
+			while current != None:
+				path.insert(0, current.name)
+				current = current.parent
+			return (path, totalDistance)
 
-	for post in TRADING_POSTS:
-		if selectedItem not in post.items:
-			selectedItem.prices[post.name] = ""
+		# Get all neighbors
+		for con in current.n:
+			# find neighbor node
+			neighbor = None
+			for n in unexploredSet:
+				if n.name == con.target:
+					neighbor = n
+			if neighbor == None: continue
 
-	i = 0
-	for post in TRADING_POSTS:
-		if selectedItem not in post.items:
-			window[f"textPrice{i}"].update(post.name + ":")
-			
-			inputPrice = window[f"inputPrice{i}"]
-			inputPrice.update(selectedItem.prices[post.name])
-			inputPrice.metadata = post
-			
-			i += 1
+			# calc new distance
+			newDist = current.distance + con.distance
+			newDistV = newDist
+			if con.ground == "normal":
+				newDistV /= vehicle.speed
+			elif con.ground == "snow":
+				newDistV /= vehicle.snowSpeed
+			elif con.ground == "sand":
+				newDistV /= vehicle.sandSpeed
 
-def tableFromRoutes (routes: List[Route]):
-	rows = []
-	for route in routes:
-		rows.append([
-			route.dest.name,
-			route.vehicle.name,
-			route.item.name,
-			numberComma(route.quantity),
-			numberComma(route.totalProfit)
-		])
-	return rows
-
-def numberComma (x: float):
-	isNegative = (x < 0)
-	if isNegative:
-		x = -x
-	
-	decimal = x % 1
-	x -= decimal
-	if decimal == 0: decimal = ""
-	else: decimal = f".{decimal}"
-
-	x = str(x)[::-1]
-	parts = []
-	for i in range(0, len(x), 3):
-		parts.append(x[i:i+3])
-	x = ",".join(parts)[::-1] + decimal
-	if isNegative: x = f"-{x}"
-	return x
+			if newDistV < neighbor.distance:
+				neighbor.distance = newDistV
+				neighbor.parent = current
 
 # Setup
 
@@ -360,6 +479,10 @@ while True:
 	elif event == "optionTradingPost": chooseTradingPost(values["optionTradingPost"])
 	elif event == "buttonCalc": calculateRoutes()
 	elif event == "buttonClear": clearCurrentItem()
+	elif event == "tableRoutes":
+		if len(values[event]) > 0:
+			row = values[event][0]
+			displayedRoutes[row].print()
 	elif str.startswith(event, "buttonItem"):
 		index = int(re.sub("\D", "", event))
 		chooseItem(selectedTradingPost.items[index])
