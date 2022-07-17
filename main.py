@@ -99,7 +99,7 @@ with open(os.path.join(__location__, "config", "nodes.json"), "r") as f:
 			# distance is measured in time taken for a nimbus
 			# ive determined that in commerce speed units, nimbus' move at 384% speed, or 3.84
 			# here we multiply that speed so that later we can divide by the speed of the chosen vehicle to get good time estimate
-			distance = int(c["distance"]) * 4
+			distance = int(c["distance"]) * 3.84
 
 			cons.append( Connection(c["name"], distance, ground) )
 		NODES.append(Node( n["name"], cons ))
@@ -446,17 +446,17 @@ def dijkstra (start: Node, end: Node, vehicle: Vehicle):
 			if neighbor == None: continue
 
 			# calc new distance
-			newDist = current.distance + con.distance
-			newDistV = newDist
+			newDist = current.distance
 			if con.ground == "normal":
-				newDistV /= vehicle.speed
+				newDist += con.distance / vehicle.speed
 			elif con.ground == "snow":
-				newDistV /= vehicle.snowSpeed
+				newDist += con.distance / vehicle.snowSpeed
 			elif con.ground == "sand":
-				newDistV /= vehicle.sandSpeed
+				newDist += con.distance / vehicle.sandSpeed
 
-			if newDistV < neighbor.distance:
-				neighbor.distance = newDistV
+			if newDist < neighbor.distance:
+				print(neighbor.name, neighbor.distance, newDist)
+				neighbor.distance = newDist
 				neighbor.parent = current
 
 # Setup
