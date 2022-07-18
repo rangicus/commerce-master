@@ -455,7 +455,6 @@ def dijkstra (start: Node, end: Node, vehicle: Vehicle):
 				newDist += con.distance / vehicle.sandSpeed
 
 			if newDist < neighbor.distance:
-				print(neighbor.name, neighbor.distance, newDist)
 				neighbor.distance = newDist
 				neighbor.parent = current
 
